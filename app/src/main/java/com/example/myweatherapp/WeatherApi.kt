@@ -7,7 +7,7 @@ import retrofit2.http.Query
 import retrofit2.http.QueryName
 
 interface WeatherApi {
-        @GET("/v1/forecast")
+        @GET("forecast")
         suspend fun forecast(
             @Query("latitude") latitude: Float,
             @Query("longitude") longitude: Float,
