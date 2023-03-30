@@ -1,5 +1,6 @@
 package com.example.myweatherapp
 
+import com.example.myweatherapp.service.WeatherService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,4 +22,6 @@ object RetrofitClient {
             .client(client)
             .build()
     }
+
+    val apiService: WeatherService = getInstance().create(WeatherService::class.java)
 }
