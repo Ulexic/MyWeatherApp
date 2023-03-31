@@ -1,8 +1,16 @@
 package com.example.myweatherapp.view
 
+import android.app.SearchManager
+import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.Menu
+import android.view.Window
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.SearchView
+import com.example.myweatherapp.R
 import com.example.myweatherapp.databinding.ActivityMainBinding
 import com.example.myweatherapp.databinding.WeekTemperatureCardBinding
 import com.example.myweatherapp.model.Weather
@@ -14,20 +22,23 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: ActivityMainBinding
+    private var isFirstLoading: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 
         viewModel = MainViewModel()
-        viewModel.setupDatabase(this)
+        viewModel.getUserLocation(this)
 
         viewModel.weather.observe(this) { weather ->
             val lightColor = getLightColorFromWeatherCode(weather.current_weather.weathercode)
@@ -35,23 +46,58 @@ class MainActivity : AppCompatActivity() {
             setAllCards(weather, lightColor)
             setWeatherInfo(weather)
             setColors(weather, lightColor)
+
+            if (isFirstLoading) {
+                binding.loading.screen.visibility = android.view.View.GONE
+                supportActionBar?.show()
+                isFirstLoading = false
+            }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        supportActionBar?.title = "test"
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.search).actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        }
+
+        val searchItem = menu.findItem(R.id.search)
+
+        val searchView = searchItem.actionView as SearchView
+        searchItem.setOnMenuItemClickListener { item ->
+            searchView.isIconified = item.itemId != R.id.search
+
+            false
+        }
+        val popupMenu: PopupMenu = PopupMenu(this, searchView)
+        popupMenu.menuInflater.inflate(R.menu.popup, popupMenu.menu)
+
+        viewModel.setPopupMenuListener(popupMenu, this, searchView, searchItem)
+        viewModel.setSearchViewListener(searchView, this, popupMenu, searchItem)
+
+        return true
     }
 
     private fun setColors(weather: Weather, lightColor: Int) {
         val darkColor = getDarkColorFromWeatherCode(weather.current_weather.weathercode)
 
+        val window: Window = window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = darkColor
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(darkColor))
+        supportActionBar?.title = viewModel.getCityName(this)
+
         binding.root.setBackgroundColor(lightColor)
         binding.linearLayout.setBackgroundColor(darkColor)
         binding.wave.setColorFilter(darkColor)
-        binding.weatherCard.LocationLayout.setBackgroundColor(darkColor)
     }
 
     private fun setWeatherInfo(weather: Weather) {
         val weatherIcon = getWeatherIconFromWeatherCode(weather.current_weather.weathercode)
-        if (weatherIcon != null) {
-            binding.weatherCard.weatherIcon.setImageResource(weatherIcon)
-        }
+        binding.weatherCard.weatherIcon.setImageResource(weatherIcon)
         binding.weatherCard.Temperature.text =
             "${weather.current_weather.temperature.toString()} °C"
 
@@ -87,8 +133,8 @@ class MainActivity : AppCompatActivity() {
         date: String,
         dayNumber: Int,
     ) {
-        day.maxTemp.text = weather.daily.temperature_2m_max[dayNumber].toString()
-        day.minTemp.text = weather.daily.temperature_2m_min[dayNumber].toString()
+        day.maxTemp.text = "${weather.daily.temperature_2m_max[dayNumber].toString()} °C"
+        day.minTemp.text = "${weather.daily.temperature_2m_min[dayNumber].toString()} °C"
         day.date.text = date
         day.card.setCardBackgroundColor(color)
     }

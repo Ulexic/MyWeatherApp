@@ -66,7 +66,7 @@ fun Int.toWeatherCode(): WeatherCode {
 
 fun getDarkColorFromWeatherCode(weatherCode: WeatherCode): Int {
     return when (weatherCode) {
-        WeatherCode.CLEAR -> Color.parseColor("#FFD700")
+        WeatherCode.CLEAR -> Color.parseColor("#ffd138")
         WeatherCode.CLOUDY -> Color.parseColor("#808080")
         WeatherCode.FOG -> Color.parseColor("#808080")
         WeatherCode.DRIZZLE -> Color.parseColor("#808080")
@@ -84,7 +84,7 @@ fun getDarkColorFromWeatherCode(weatherCode: WeatherCode): Int {
 
 fun getLightColorFromWeatherCode(weatherCode: WeatherCode): Int {
     return when (weatherCode) {
-        WeatherCode.CLEAR -> Color.parseColor("#ffd84d")
+        WeatherCode.CLEAR -> Color.parseColor("#ffdf75")
         WeatherCode.CLOUDY -> Color.parseColor("#a3a2a2")
         WeatherCode.FOG -> Color.parseColor("#a3a2a2")
         WeatherCode.DRIZZLE -> Color.parseColor("#a3a2a2")
@@ -100,20 +100,20 @@ fun getLightColorFromWeatherCode(weatherCode: WeatherCode): Int {
     }
 }
 
-fun getWeatherIconFromWeatherCode(weatherCode: WeatherCode): Int? {
+fun getWeatherIconFromWeatherCode(weatherCode: WeatherCode): Int {
     return when (weatherCode) {
         WeatherCode.CLEAR -> R.drawable.clear_day
         WeatherCode.CLOUDY -> R.drawable.cloudy_day
-        WeatherCode.FOG -> null
-        WeatherCode.DRIZZLE -> null
+        WeatherCode.FOG -> R.drawable.fog
+        WeatherCode.DRIZZLE -> R.drawable.rainy_4_cropped
         WeatherCode.RAIN -> R.drawable.rainy_6
-        WeatherCode.FREEZING_DRIZZLE -> null
-        WeatherCode.FREEZING_RAIN -> null
+        WeatherCode.FREEZING_DRIZZLE -> R.drawable.hail
+        WeatherCode.FREEZING_RAIN -> R.drawable.rainy_6
         WeatherCode.SNOW_FALL -> R.drawable.snowy_6
         WeatherCode.SNOW -> R.drawable.snowy_6
         WeatherCode.RAIN_SHOWERS -> R.drawable.rainy_6
         WeatherCode.SNOW_SHOWERS -> R.drawable.snowy_6
         WeatherCode.THUNDERSTORM -> R.drawable.thunder
-        WeatherCode.HAIL -> null
+        WeatherCode.HAIL -> R.drawable.hail
     }
 }

@@ -1,7 +1,6 @@
 package com.example.myweatherapp.database
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
 @Database(entities = [WeatherEntity::class], version = 1)
 abstract class WeatherDatabase : RoomDatabase() {
     abstract fun weatherDao(): WeatherDao
+//    abstract fun cityDao(): WeatherCityDao
 
     companion object {
         @Volatile
@@ -27,13 +27,12 @@ abstract class WeatherDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     WeatherDatabase::class.java,
-                    "city_database"
+                    "weather_database"
                 )
                     .fallbackToDestructiveMigration()
                     .addCallback(DatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
-                Log.d("CityDatabase", "getDatabase: $instance")
                 // return instance
                 instance
             }
@@ -50,8 +49,8 @@ abstract class WeatherDatabase : RoomDatabase() {
             }
         }
 
-        suspend fun populateDatabase(cityDao: WeatherDao) {
-            cityDao.deleteAll()
+        suspend fun populateDatabase(weatherDao: WeatherDao) {
+            weatherDao.deleteAll()
         }
     }
 }

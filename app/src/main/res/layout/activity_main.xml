@@ -1,59 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <include
-        android:id="@+id/weatherCard"
-        layout="@layout/weather_card" />
-
-    <ImageView
-        android:id="@+id/wave"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitStart"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:srcCompat="@drawable/wave_cropped" />
+        android:layout_height="match_parent">
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:gravity="center"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
 
         <include
-            android:id="@+id/day1"
-            layout="@layout/week_temperature_card" />
+            android:id="@+id/weatherCard"
+            layout="@layout/weather_card"
+            app:layout_constraintBottom_toTopOf="@id/wave" />
 
-        <include
-            android:id="@+id/day2"
-            layout="@layout/week_temperature_card" />
+        <ImageView
+            android:id="@+id/wave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:srcCompat="@drawable/wave_cropped"
+            app:tint="@color/orange_dark" />
 
-        <include
-            android:id="@+id/day3"
-            layout="@layout/week_temperature_card" />
 
-        <include
-            android:id="@+id/day4"
-            layout="@layout/week_temperature_card" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:background="@color/orange_dark"
+            android:gravity="center"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <include
-            android:id="@+id/day5"
-            layout="@layout/week_temperature_card" />
+            <include
+                android:id="@+id/day1"
+                layout="@layout/week_temperature_card" />
 
-    </LinearLayout>
+            <include
+                android:id="@+id/day2"
+                layout="@layout/week_temperature_card" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                android:id="@+id/day3"
+                layout="@layout/week_temperature_card" />
 
+            <include
+                android:id="@+id/day4"
+                layout="@layout/week_temperature_card" />
+
+            <include
+                android:id="@+id/day5"
+                layout="@layout/week_temperature_card" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/loading"
+        layout="@layout/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+</RelativeLayout>
